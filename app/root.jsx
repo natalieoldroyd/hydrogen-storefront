@@ -13,6 +13,7 @@ import {
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
+import { GoogleGTM } from './components/GoogleGTM';
 
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
@@ -57,6 +58,7 @@ export const links = () => {
 
 export async function loader({request, context}) {
   const {session, storefront, cart} = context;
+  const googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
   const [customerAccessToken, layout] = await Promise.all([
     session.get('customerAccessToken'),
     getLayoutData(context),
@@ -67,6 +69,7 @@ export async function loader({request, context}) {
   return defer({
     isLoggedIn: Boolean(customerAccessToken),
     layout,
+    googleGtmID,
     selectedLocale: storefront.i18n,
     cart: cart.get(),
     analytics: {
@@ -104,6 +107,7 @@ export default function App() {
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
+        <GoogleGTM id={data.googleGtmID} />
       </body>
     </html>
   );
