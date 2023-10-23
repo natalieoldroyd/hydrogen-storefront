@@ -16,10 +16,10 @@ import invariant from 'tiny-invariant';
 
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
+import { GoogleGTM } from './components/GoogleGTM';
 
 
 import favicon from '../public/favicon.svg';
-import { GoogleGTM } from './components/GoogleGTM';
 
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
