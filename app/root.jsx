@@ -13,12 +13,13 @@ import {
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-import { GoogleGTM } from './components/GoogleGTM';
 
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
 
+
 import favicon from '../public/favicon.svg';
+import { GoogleGTM } from './components/GoogleGTM';
 
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
@@ -87,7 +88,7 @@ export default function App() {
   const hasUserConsent = true;
 
   useAnalytics(hasUserConsent);
-
+  console.log('gtm id', data.googleGtmID);
   return (
     <html lang={locale.language}>
       <head>
