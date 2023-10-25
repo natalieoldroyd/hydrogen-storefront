@@ -328,6 +328,7 @@ export function ProductForm({variants}) {
                 ]}
                 variant="primary"
                 data-test="add-to-cart"
+                id="gtm-test"
                 analytics={{
                   products: [productAnalytics],
                   totalValue: parseFloat(productAnalytics.price),

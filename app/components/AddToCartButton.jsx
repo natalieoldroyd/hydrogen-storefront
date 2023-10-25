@@ -16,6 +16,7 @@ export function AddToCartButton({
   variant = 'primary',
   width = 'full',
   disabled,
+  id='',
   analytics,
   ...props
 }) {
@@ -41,6 +42,7 @@ export function AddToCartButton({
               width={width}
               variant={variant}
               className={className}
+              id={id}
               disabled={disabled ?? fetcher.state !== 'idle'}
               {...props}
             >
