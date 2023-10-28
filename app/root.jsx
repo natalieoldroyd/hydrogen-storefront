@@ -10,6 +10,7 @@ import {
   useLoaderData,
   useMatches,
   useRouteError,
+  useLocation,
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
@@ -17,6 +18,7 @@ import invariant from 'tiny-invariant';
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
 import { GoogleGTM } from './components/GoogleGTM';
+import {useEffect} from 'react';
 
 
 import favicon from '../public/favicon.svg';
@@ -26,6 +28,7 @@ import {NotFound} from './components/NotFound';
 import styles from './styles/app.css';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
+import * as gtag from './lib/gtags';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate = ({formMethod, currentUrl, nextUrl}) => {
@@ -60,17 +63,20 @@ export const links = () => {
 export async function loader({request, context}) {
   const {session, storefront, cart} = context;
   const googleGtmID = context.env.PUBLIC_GOOGLE_GTM_ID;
+  const gaTrackingId = context.env.GA_TRACKING_ID;
   const [customerAccessToken, layout] = await Promise.all([
     session.get('customerAccessToken'),
     getLayoutData(context),
   ]);
 
   const seo = seoPayload.root({shop: layout.shop, url: request.url});
+  // console.log('gatrackingid in loader', gaTrackingId);
 
   return defer({
     isLoggedIn: Boolean(customerAccessToken),
     layout,
     googleGtmID,
+    gaTrackingId,
     selectedLocale: storefront.i18n,
     cart: cart.get(),
     analytics: {
@@ -84,11 +90,22 @@ export async function loader({request, context}) {
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData();
+  // console.log('data in app', data);
   const locale = data.selectedLocale ?? DEFAULT_LOCALE;
   const hasUserConsent = true;
+  const {gaTrackingId} = data.gaTrackingId;
+  const location = useLocation();
 
   useAnalytics(hasUserConsent);
-  console.log('gtm id', data.googleGtmID);
+  // console.log('gtm id', data.googleGtmID);
+  console.log('gaTrackingId', data.gaTrackingId);
+
+  useEffect(() => {
+    if (gaTrackingId?.length) {
+      gtag.pageview(location.pathname, gaTrackingId);
+    }
+  }, [location, gaTrackingId]);
+
   return (
     <html lang={locale.language}>
       <head>
@@ -99,6 +116,29 @@ export default function App() {
         <Links />
       </head>
       <body>
+        {!gaTrackingId ? null : (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`}
+            />
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', '${gaTrackingId}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+              }}
+            />
+          </>
+        )}
         <Layout
           key={`${locale.language}-${locale.country}`}
           layout={data.layout}
