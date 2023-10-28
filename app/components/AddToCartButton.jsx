@@ -6,6 +6,8 @@ import {
 } from '@shopify/hydrogen';
 import {useEffect} from 'react';
 
+import * as gtag from '~/lib/gtags';
+
 import {Button} from '~/components';
 import {usePageAnalytics} from '~/hooks/usePageAnalytics';
 
@@ -43,6 +45,12 @@ export function AddToCartButton({
               variant={variant}
               className={className}
               id={id}
+              onClick={() => {
+                console.log('Add to Cart Button Clicked'); // Add console.log statement
+                gtag.event({
+                  action: 'add_to_cart',
+                });
+              }}
               disabled={disabled ?? fetcher.state !== 'idle'}
               {...props}
             >

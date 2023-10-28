@@ -98,7 +98,7 @@ export default function App() {
 
   useAnalytics(hasUserConsent);
   // console.log('gtm id', data.googleGtmID);
-  console.log('gaTrackingId', data.gaTrackingId);
+  // console.log('gaTrackingId', data.gaTrackingId);
 
   useEffect(() => {
     if (gaTrackingId?.length) {
