@@ -284,3 +284,32 @@ export function isLocalPath(url) {
 
   return false;
 }
+
+export function getPublicEnv(env) {
+  if (typeof env !== 'object') {
+    return null;
+  }
+
+  const defaultPublicEnv = {};
+
+  const publicEnv = Object.keys(env).reduce((acc, key) => {
+    if (acc && key.startsWith('PUBLIC_')) {
+      const envKey = key;
+      const envValue = env[envKey];
+      acc[envKey] = envValue;
+    }
+    return acc;
+  }, defaultPublicEnv);
+
+  if (publicEnv && Object.keys(publicEnv).length === 0) {
+    return null;
+  }
+
+  return publicEnv;
+}
+
+// Returns the public environment variables anywhere in your app
+export function useEnv(key = 'publicEnv'){
+  const [root] = useMatches();
+  return root?.data?.[key] ?? {};
+}

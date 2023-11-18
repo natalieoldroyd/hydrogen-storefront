@@ -13,23 +13,25 @@ import {
   useLocation,
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
+// eslint-disable-next-line import/order
 import invariant from 'tiny-invariant';
 // random commment
 
-import {Layout} from '~/components';
-import {seoPayload} from '~/lib/seo.server';
-import { GoogleGTM } from './components/GoogleGTM';
 import {useEffect} from 'react';
-
 
 import favicon from '../public/favicon.svg';
 
+import {GoogleGTM} from './components/GoogleGTM';
+import {ShopifyInbox} from './components/ShopifyInbox';
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
 import styles from './styles/app.css';
-import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
+import {DEFAULT_LOCALE, parseMenu, getPublicEnv, useEnv} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
 import * as gtag from './lib/gtags';
+
+import {seoPayload} from '~/lib/seo.server';
+import {Layout} from '~/components';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate = ({formMethod, currentUrl, nextUrl}) => {
@@ -85,12 +87,14 @@ export async function loader({request, context}) {
       shopId: layout.shop.id,
     },
     seo,
+    publicEnv: getPublicEnv(context.env),
   });
 }
 
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData();
+  const env = useEnv();
   // console.log('data in app', data);
   const locale = data.selectedLocale ?? DEFAULT_LOCALE;
   const hasUserConsent = true;
@@ -117,6 +121,20 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <ShopifyInbox
+          button={{
+            color: 'red',
+            style: 'icon',
+            horizontalPosition: 'button_right',
+            verticalPosition: 'lowest',
+            text: 'chat_with_us',
+            icon: 'chat_bubble',
+          }}
+          shop={{
+            domain: env.PUBLIC_STORE_DOMAIN,
+            id: env.PUBLIC_SHOPIFY_INBOX_SHOP_ID,
+          }}
+        />
         {!gaTrackingId ? null : (
           <>
             <script
