@@ -1,5 +1,5 @@
 // filename: app/components/ShopifyInbox.jsx
-import { Script } from '@shopify/hydrogen';
+import {Script} from '@shopify/hydrogen';
 
 export function ShopifyInbox({
   button,
@@ -18,8 +18,8 @@ export function ShopifyInbox({
   const defaultButton = {
     color: 'black',
     style: 'icon',
-    horizontalPosition: 'button_right',
-    verticalPosition: 'lowest',
+    horizontalPosition: 'button_left',
+    verticalPosition: 'higher',
     text: 'chat_with_us',
     icon: 'chat_bubble',
   };

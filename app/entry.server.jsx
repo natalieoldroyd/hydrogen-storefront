@@ -14,7 +14,8 @@ export default async function handleRequest(
       "'self'",
       'cdn.shopify.com',
       'monorail-edge.shopifysvc.com',
-      'shopify-chat.shopifyapps.com', // Shopify Inbox
+      'shopify-chat.shopifyapps.com',
+      'http://www.google-analytics.com',
     ],
   });
   const body = await renderToReadableStream(
