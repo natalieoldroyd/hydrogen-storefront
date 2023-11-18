@@ -7,7 +7,6 @@ import {
 import {useEffect} from 'react';
 
 import * as gtag from '~/lib/gtags';
-
 import {Button} from '~/components';
 import {usePageAnalytics} from '~/hooks/usePageAnalytics';
 

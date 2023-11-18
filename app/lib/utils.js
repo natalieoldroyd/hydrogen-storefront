@@ -309,7 +309,7 @@ export function getPublicEnv(env) {
 }
 
 // Returns the public environment variables anywhere in your app
-export function useEnv(key = 'publicEnv'){
+export function useEnv(key = 'publicEnv') {
   const [root] = useMatches();
   return root?.data?.[key] ?? {};
 }
