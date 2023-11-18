@@ -14,6 +14,7 @@ import {
 } from '@remix-run/react';
 import {ShopifySalesChannel, Seo, useNonce} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
+// random commment
 
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
