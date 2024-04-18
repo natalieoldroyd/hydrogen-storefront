@@ -107,6 +107,7 @@ export default function App() {
   // console.log('gaTrackingId', data.gaTrackingId);
 
   useEffect(() => {
+    localStorage.setItem('foo', 'bar');
     if (gaTrackingId?.length) {
       gtag.pageview(location.pathname, gaTrackingId);
     }
